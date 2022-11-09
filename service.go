@@ -29,7 +29,7 @@ func (s *priceFetcher) FetchPrice(ctx context.Context, ticker string) (float64, 
 //mimic an API call
 var priceMocks = map[string] float64 {
 	"BTC": 20_000.0,
-	"ETH": 200,
+	"ETH": 200.0,
 	"GG": 100_000.0,
 }
 
