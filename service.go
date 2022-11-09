@@ -10,7 +10,7 @@ import (
 	"fmt"
 )
 
-//Declaring interface with the function we will call FetchPrice(), to fetch a price
+//Declaring interface with the function we will call: FetchPrice(), to fetch a price
 //context is used along many tools, it is common practive to pass it as first argument: 
 //example: cancelling after 1 sec,
 //function will return float and error
@@ -18,7 +18,7 @@ type PriceFetcher interface {
 	FetchPrice(context.Context, string) (float64,error)
 }
 
-//priceFether implements the PriceFetcher interface
+//priceFether implements the PriceFetcher interface: decorator pattern
 type priceFetcher struct {}
 
 func (s *priceFetcher) FetchPrice(ctx context.Context, ticker string) (float64, error) {
