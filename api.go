@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+
+	"github.com/esnchez/types"
+
 )
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
-type PriceResponse struct {
-	Price float64 `json:"price"`
-	Ticker string `json:"ticker"`
-}
+
 
 type JSONAPIServer struct {
 	listenAddress string
@@ -50,11 +50,12 @@ func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWri
 	if err != nil {
 		return err
 	}
-	priceResp := PriceResponse {
+	priceResp := types.PriceResponse {
 		Price : price,
 		Ticker : ticker,
 	}
 
+	//the api call is returning PriceResponse encoded
 	return writeJSON(w, http.StatusOK, &priceResp)
 }
 
