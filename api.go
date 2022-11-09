@@ -12,8 +12,6 @@ import (
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
 
-
-
 type JSONAPIServer struct {
 	listenAddress string
 	svc PriceFetcher
@@ -26,7 +24,7 @@ func NewJSONAPIService(listenAdr string, a PriceFetcher ) *JSONAPIServer {
 	}
 }
 
-
+//this handler manages the response we will output if the service call fails and returns error
 func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 	ctx := context.Background()
 	ctx = context.WithValue(ctx, "requestID", rand.Intn(1000000))
@@ -38,14 +36,17 @@ func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 	}
 }
 
+
 func (s *JSONAPIServer) Run() {
 	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleFetchPrice))
 	http.ListenAndServe(s.listenAddress, nil)
 }
 
+//api call
 func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	ticker := r.URL.Query().Get("ticker")
 
+	//service call
 	price, err := s.svc.FetchPrice(ctx,ticker)
 	if err != nil {
 		return err
@@ -55,7 +56,7 @@ func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWri
 		Ticker : ticker,
 	}
 
-	//the api call is returning PriceResponse encoded
+	//the api call if succeeds returns PriceResponse json formatted + statusOK
 	return writeJSON(w, http.StatusOK, &priceResp)
 }
 
