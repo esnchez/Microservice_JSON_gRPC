@@ -35,7 +35,7 @@ func (s *Client) FetchPrice(ctx context.Context, ticker string) (*types.PriceRes
 		return nil,err
 	}
 
-	//IF we are are receveing a bad response from the api, managing the error we output
+	//when receveing bad response from the api, managing the error we output as the api
 	if resp.StatusCode != http.StatusOK {
 		httpErr := map[string]any{}
 		if err := json.NewDecoder(resp.Body).Decode(&httpErr); err != nil {
