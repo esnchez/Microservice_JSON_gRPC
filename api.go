@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 
 	"github.com/esnchez/types"
-
 )
 
 type APIFunc func(context.Context, http.ResponseWriter, *http.Request) error
@@ -39,6 +39,7 @@ func makeHTTPHandlerFunc(apiFn APIFunc) http.HandlerFunc {
 
 func (s *JSONAPIServer) Run() {
 	http.HandleFunc("/", makeHTTPHandlerFunc(s.handleFetchPrice))
+	fmt.Printf("Server running on port %v\n", s.listenAddress)
 	http.ListenAndServe(s.listenAddress, nil)
 }
 
@@ -62,6 +63,7 @@ func (s *JSONAPIServer) handleFetchPrice(ctx context.Context, w http.ResponseWri
 
 
 func writeJSON(w http.ResponseWriter, s int, v any) error {
+	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(s)
 	return json.NewEncoder(w).Encode(v)
 }
